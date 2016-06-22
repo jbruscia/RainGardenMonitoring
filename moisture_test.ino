@@ -66,5 +66,5 @@ void loop() {
 
   
 
-  delay(1600);
+  delay(1500);
 }
