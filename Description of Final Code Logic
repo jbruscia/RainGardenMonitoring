@@ -1,7 +1,7 @@
 Description of what we desire in the final code:
 
 -- magnetic reed switch will act as a mechanical interrupt (attached to a digital interrupt in Arduino code) to trigger Arduino to
-    begin collecting data
+    begin collecting data or to exit sleep mode
 -- data will be collected every 10 minutes from all sensors during rain period
 -- when rain stops, the sensors will continue to log data every 15 minutes for 2 hours
 -- after this two hour period, the arduino will go into sleep mode to save power
