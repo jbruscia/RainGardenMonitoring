@@ -6,6 +6,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   double sensorValue1 = analogRead(A0);
+  delay(50);
   double sensorValue2 = analogRead(A1);
   
   
