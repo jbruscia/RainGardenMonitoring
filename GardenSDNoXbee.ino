@@ -47,22 +47,13 @@ void sleepNow() //put microcontroller to sleep here
   sleep_disable(); //first thing done after waking up
   detachInterrupt(2); //disable interrupt so that wakeUpNow
                       //will not be executed during normal running
-  if (SD.exists("DataLog.txt"))
-  {
-    SD.remove("DataLog.txt");
-    delay(50);
-    setupLogFile();
-  }
 }
 
 void loop() {
-  //count to 10 seconds before going to sleep
-  Serial1.print("Awake for ");
-  Serial1.print(count);
-  Serial1.println("sec");
+  //count to 2 hours before going to sleep
   count++; 
 
-  delay(1000);   // waits for a second
+  delay(300000);   // waits 5 minutes before reading data
   
   String dataRec = createDataRecord();
   
@@ -73,19 +64,13 @@ void loop() {
   // so you have to close this one before opening another.
   File dataFile = SD.open("DataLog.txt");
 
-  // if the file is available, write to it:
-  if (dataFile) {
-    while (dataFile.available()) {
-      Serial1.write(dataFile.read());
-    }
-    dataFile.close();
   }
   // if the file isn't open, pop up an error:
   else {
     Serial1.println("error opening DataLog.txt");
   }
 
-  if (count >= 10) {
+  if (count >= 24) {
       Serial1.println("Timer: Entering Sleep mode");
       delay(100);     // this delay is needed, the sleep
                       //function will provoke a Serial error otherwise!!
