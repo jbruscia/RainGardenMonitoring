@@ -9,8 +9,8 @@
 #define FILE_NAME "DataLog.txt"
  
 //Data header  (these lines get written to the beginning"
-#define LOGGERNAME "Mayfly microSD Card Tester"
-#define DATA_HEADER "SampleNumber, vwc"
+#define LOGGERNAME "Longterm Data"
+#define DATA_HEADER "SampleNumber, PercentMoisture"
 
 int samplenum = 1;
 int wakePin = 10;  //rain gauge pin
