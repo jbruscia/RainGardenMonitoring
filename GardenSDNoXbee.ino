@@ -1,9 +1,4 @@
 #include <DS3231.h>
-
-//#include <Time.h>
-//#include <TimeLib.h>
-//#include <DS1307RTC.h>
-
 #include <avr/sleep.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -23,8 +18,10 @@ DS3231 rtc(SDA,SCL);
 int wakePin = 10;  //rain gauge pin
 int sleepStatus = 0; //variable to store request for sleep
 int count = 0; //counter
-float sensorVal1;
-float voltage1;
+int analogNum = 0;
+float sensorVal;
+float raingauge;
+float voltage;
 float vwc;
 
 void wakeUpNow()  //interrupt is handled here after waking up
@@ -84,8 +81,8 @@ void setup() {
   sleepNow();
   Wire.begin();
 
-  rtc.setDate(26, 07, 2016); //set date and time
-  rtc.setTime(15, 20, 00);
+  rtc.setDate(27, 07, 2016); //set date and time
+  rtc.setTime(10, 20, 00);
 }
 
 void sleepNow() //put microcontroller to sleep here
@@ -104,42 +101,42 @@ void sleepNow() //put microcontroller to sleep here
 String createDataRecord()
 {
   //Create a String type data record in csv format
-  //SampleTime, Moisture
+  SampleTime, Moisture
   String data = "Date: ";
-//  RTC.read(tm);
-//  data += tm.Hour;
-//  data += ":";
-//  data += tm.Minute;
-//  data += ", Date (D/M)";
-//  data += tm.Day;
-//  data += "/";
-//  data += tm.Month;
   data += rtc.getDateStr();
   data += ", Time: ";
   data += rtc.getTimeStr();
-  data += ", Moisture: ";
-  sensorVal1 = analogRead(A0); //read soil moisture sensor
-  voltage1 =(sensorVal1/1023)*3; //conversion to voltage from analog
-
+    data += ", Moisture: ";
+  
+  for (analogNum = 0; analogNum <= 11; analogNum++){
+   if (analogNum == 6){
+    analogNum = 7;
+   }
+  sensorVal = analogRead(analogNum); //read soil moisture sensor
+  voltage =(sensorVal/1023)*3; //conversion to voltage from analog
+  
+  
   // following if statement is a calibration for percent moisture from manufacturer
-  if(voltage1 <= 1.1)
+  if(voltage <= 1.1)
   {
-    vwc = 10*voltage1;
+    vwc = 10*voltage;
     }
-  else if(voltage1 <= 1.3)
+  else if(voltage <= 1.3)
   {
-    vwc = 25*voltage1-17.5;
+    vwc = 25*voltage-17.5;
     }
-  else if(voltage1 <= 1.82)
+  else if(voltage <= 1.82)
   {
-    vwc = 48.08*voltage1-47.5;
+    vwc = 48.08*voltage-47.5;
     }
-  else if(voltage1 <= 2.2)
+  else if(voltage <= 2.2)
   {
-    vwc = 26.32*voltage1-7.89;
+    vwc = 26.32*voltage-7.89;
     }
  else vwc = 0;
   data += vwc;     //adds the battery voltage to the data string
+  data += ", ";
+  }
   return data;
 }
 
@@ -147,7 +144,7 @@ void loop() {
   //count to 2 hours before going to sleep
   count++; 
 
-  delay(3000);   // waits 5 minutes before reading data
+  delay(300000);   // waits 5 minutes before reading data
 
   String dataRec = createDataRecord();
   
