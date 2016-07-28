@@ -89,7 +89,7 @@ void setup() {
   Wire.begin();
 
   rtc.setDate(28, 07, 2016); //set date and time
-  rtc.setTime(15, 05, 00);
+  rtc.setTime(15, 10, 00);
 
   raingauge = 0.01; //when system wakes up, 0.01" of rain have fallen
 }
